@@ -1,0 +1,27 @@
+# === RAILS IGNORE RULES ===
+/.bundle
+/env*
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
+
+# === FRONTEND (React) ===
+/frontend/node_modules/
+/frontend/dist/
+
+# === DOCKER ===
+/docker-compose.override.yml
+*.env.local
+
+# === SYSTEM / EDITOR FILES ===
+.DS_Store
+.byebug_history
