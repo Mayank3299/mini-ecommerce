@@ -28,13 +28,15 @@ module Types
       "Hello World!"
     end
 
-    field :cart, Types::CartType, null: false do
+    field :cart, Types::CartType, null: true do
       description "Fetch a cart by its ID"
       argument :id, ID, required: true
     end
 
     def cart(id:)
       Cart.find(id)
+    rescue
+      raise GraphQL::ExecutionError, "Cart not found"
     end
   end
 end
