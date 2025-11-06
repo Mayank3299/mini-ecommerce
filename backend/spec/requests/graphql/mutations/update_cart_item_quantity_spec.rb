@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'UpdateCartItemQuantity Mutation', type: :request do
-  let!(:product) { Product.create!(name: 'T-shirt', price: 499) }
+  let!(:product) { Product.create!(name: 'T-shirt', price: 499, stock: 5) }
   let!(:cart) { Cart.create! }
   let!(:cart_item) { cart.cart_items.create!(product: product, quantity: 2) }
 
@@ -63,7 +63,7 @@ RSpec.describe 'UpdateCartItemQuantity Mutation', type: :request do
   end
 
   it 'returns error if product not in cart' do
-    another_product = Product.create!(name: 'Jeans', price: 999)
+    another_product = Product.create!(name: 'Jeans', price: 999, stock: 5)
 
     query = <<~GQL
       mutation {

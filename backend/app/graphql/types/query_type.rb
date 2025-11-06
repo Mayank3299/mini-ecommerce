@@ -38,5 +38,11 @@ module Types
     rescue
       raise GraphQL::ExecutionError, "Cart not found"
     end
+
+    field :products, [ Types::ProductType ], null: false, description: "Fetch all products"
+
+    def products
+      Product.all
+    end
   end
 end

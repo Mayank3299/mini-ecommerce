@@ -8,8 +8,8 @@ RSpec.describe Cart, type: :model do
 
   it 'can have many items' do
     cart = Cart.create!
-    product1 = Product.create!(name: 'T-shirt', price: 500)
-    product2 = Product.create!(name: 'Jeans', price: 1000)
+    product1 = Product.create!(name: 'T-shirt', price: 500, stock: 5)
+    product2 = Product.create!(name: 'Jeans', price: 1000, stock: 5)
 
     CartItem.create!(cart: cart, product: product1, quantity: 2)
     CartItem.create!(cart: cart, product: product2, quantity: 1)

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CartItem, type: :model do
   let(:cart) { Cart.create! }
-  let(:product) { Product.create!(name: 'T-shirt', price: 499) }
+  let(:product) { Product.create!(name: 'T-shirt', price: 499, stock: 5) }
 
   it 'is valid with valid attributes' do
     cart_item = CartItem.new(cart: cart, product: product, quantity: 2)

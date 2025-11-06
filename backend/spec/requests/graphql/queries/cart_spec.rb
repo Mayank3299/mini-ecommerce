@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Cart Query', type: :request do
-  let!(:product1) { Product.create!(name: 'T-shirt', price: 499) }
-  let!(:product2) { Product.create!(name: 'Shoes', price: 1299) }
+  let!(:product1) { Product.create!(name: 'T-shirt', price: 499, stock: 5) }
+  let!(:product2) { Product.create!(name: 'Shoes', price: 1299, stock: 5) }
   let!(:cart) { Cart.create! }
   let!(:item1) { cart.cart_items.create!(product: product1, quantity: 2) }
   let!(:item2) { cart.cart_items.create!(product: product2, quantity: 1) }

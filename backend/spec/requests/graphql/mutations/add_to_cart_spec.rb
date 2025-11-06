@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'AddToCart Mutation', type: :request do
-  let!(:product) { Product.create!(name: 'T-shirt', price: 499) }
+  let!(:product) { Product.create!(name: 'T-shirt', price: 499, stock: 5) }
   let!(:cart) { Cart.create! }
 
   it 'returns success and message when product is added' do
