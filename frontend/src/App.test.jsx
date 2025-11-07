@@ -1,13 +1,13 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
+import { ChakraProvider } from "@chakra-ui/react";
+import { system } from "@chakra-ui/react/preset";
 import App from "./App";
 import { PRODUCTS_QUERY } from "./graphql/queries";
 
 const mocks = [
   {
-    request: {
-      query: PRODUCTS_QUERY,
-    },
+    request: { query: PRODUCTS_QUERY },
     result: {
       data: {
         products: [
@@ -23,7 +23,9 @@ describe("App component", () => {
   it("renders products fetched from GraphQL", async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <App />
+        <ChakraProvider value={system}>
+          <App />
+        </ChakraProvider>
       </MockedProvider>
     );
 
