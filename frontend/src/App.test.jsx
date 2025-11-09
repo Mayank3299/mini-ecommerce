@@ -22,7 +22,7 @@ const mocks = [
 describe("App component", () => {
   it("renders products fetched from GraphQL", async () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={mocks}>
         <ChakraProvider value={system}>
           <App />
         </ChakraProvider>

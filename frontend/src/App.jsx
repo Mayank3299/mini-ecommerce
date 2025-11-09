@@ -1,17 +1,28 @@
+import { useState } from "react";
+import { Box, SimpleGrid, Spinner, Center, Text } from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
+import Navbar from "./components/Navbar";
+import ProductCard from "./components/ProductCard";
 import { PRODUCTS_QUERY } from "./graphql/queries";
-import {
-  Box,
-  Heading,
-  Text,
-  SimpleGrid,
-  Spinner,
-  Center,
-} from "@chakra-ui/react";
 
-function App() {
+const App = () => {
   const { loading, error, data } = useQuery(PRODUCTS_QUERY);
+  const [cartItems, setCartItems] = useState([]);
 
+  const handleAddToCart = (product) => {
+    const existing = cartItems.find((item) => item.id === product.id);
+    if (existing) {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
+    } else {
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+  };
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   if (loading)
     return (
       <Center h="100vh" flexDirection="column">
@@ -28,32 +39,22 @@ function App() {
     );
 
   return (
-    <Box p={8}>
-      <Heading textAlign="center" mb={8}>
-        🛒 ChatPat Store
-      </Heading>
+    <Box minH="100vh" bg="gray.50">
+      <Navbar cartCount={totalItems} />
 
-      <SimpleGrid columns={[1, 2, 3]} spacing={6}>
-        {data.products.map((product) => (
-          <Box
-            key={product.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            p={6}
-            shadow="md"
-          >
-            <Heading size="md">{product.name}</Heading>
-            <Text color="gray.600" mt={2}>
-              ₹{product.price}
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              Stock: {product.stock}
-            </Text>
-          </Box>
-        ))}
-      </SimpleGrid>
+      <Box p={8}>
+        <SimpleGrid columns={[1, 2, 3]} spacing={8}>
+          {data.products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={handleAddToCart}
+            />
+          ))}
+        </SimpleGrid>
+      </Box>
     </Box>
   );
-}
+};
 
 export default App;
