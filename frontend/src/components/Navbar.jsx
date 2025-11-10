@@ -1,6 +1,6 @@
 import { Flex, Heading, Button, Badge, Box } from "@chakra-ui/react";
 
-const Navbar = ({ cartCount }) => {
+const Navbar = ({ cartCount, onCartClick }) => {
   return (
     <Flex
       as="nav"
@@ -24,6 +24,7 @@ const Navbar = ({ cartCount }) => {
           fontWeight="bold"
           _hover={{ bg: "teal.600" }}
           size="lg"
+          onClick={onCartClick}
         >
           Cart
         </Button>
