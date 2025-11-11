@@ -5,9 +5,16 @@ import {
   VStack,
   HStack,
   Box,
+  Icon,
+  IconButton,
 } from "@chakra-ui/react";
+  import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 
-const CartDrawer = ({ isOpen, onClose, cartItems }) => {
+const CartDrawer = ({ isOpen, onClose, cartItems, onUpdateCart }) => {
+  const handleIncrease = (item) => onUpdateCart(item, "increase");
+  const handleDecrease = (item) => onUpdateCart(item, "decrease");
+  const handleRemove = (item) => onUpdateCart(item, "remove");
+
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -48,18 +55,52 @@ const CartDrawer = ({ isOpen, onClose, cartItems }) => {
                     borderRadius="md"
                     p={3}
                     shadow="xs"
-                    _hover={{ shadow: "sm", transform: "scale(1.01)" }}
-                    transition="0.2s ease"
                   >
                     <HStack justify="space-between">
                       <Text fontWeight="medium">{item.name}</Text>
-                      <Text color="gray.600">x{item.quantity}</Text>
+                      <IconButton
+                        size="xs"
+                        colorScheme="red"
+                        variant="ghost"
+                        onClick={() => handleRemove(item)}
+                        aria-label="Remove item"
+                      >
+                        <FaTrash />
+                      </IconButton>
                     </HStack>
+
                     <Text color="gray.500" fontSize="sm">
                       ₹{item.price} each
                     </Text>
+
+                    <HStack justify="space-between" mt={2}>
+                      <HStack>
+                        <IconButton
+                          size="sm"
+                          colorScheme="teal"
+                          variant="outline"
+                          onClick={() => handleDecrease(item)}
+                        >
+                          <FaMinus />
+                        </IconButton>  
+                        <Text fontWeight="bold">{item.quantity}</Text>
+                        <IconButton
+                          icon={<FaPlus />}
+                          size="sm"
+                          colorScheme="teal"
+                          variant="outline"
+                          onClick={() => handleIncrease(item)}
+                        >
+                          <FaPlus />
+                        </IconButton>
+                      </HStack>
+                      <Text fontWeight="medium">
+                        ₹{item.price * item.quantity}
+                      </Text>
+                    </HStack>
                   </Box>
                 ))}
+
                 <HStack justify="space-between" pt={3}>
                   <Text fontWeight="bold">Total:</Text>
                   <Text fontWeight="bold" fontSize="lg">

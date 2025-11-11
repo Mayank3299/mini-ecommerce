@@ -1,32 +1,65 @@
-import React, { useState } from "react";
-import { Box, SimpleGrid, Center, Spinner, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Box, SimpleGrid, Spinner, Center, Text } from "@chakra-ui/react";
+import { useQuery, useMutation } from "@apollo/client";
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 import CartDrawer from "./components/CartDrawer";
-import { useQuery } from "@apollo/client";
 import { PRODUCTS_QUERY } from "./graphql/queries";
+import { CREATE_CART, ADD_TO_CART, UPDATE_CART_ITEM, REMOVE_FROM_CART, GET_CART } from "./graphql/cart";
 
 const App = () => {
   const { loading, error, data } = useQuery(PRODUCTS_QUERY);
   const [cartItems, setCartItems] = useState([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartId, setCartId] = useState(localStorage.getItem("cartId") || null);
 
-  const handleAddToCart = (product) => {
-    const existing = cartItems.find((item) => item.id === product.id);
-    if (existing) {
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+  const [createCart] = useMutation(CREATE_CART);
+  const [addToCart] = useMutation(ADD_TO_CART);
+  const [updateCart] = useMutation(UPDATE_CART_ITEM);
+  const [removeFromCart] = useMutation(REMOVE_FROM_CART);
+
+  const { data: cartData, refetch } = useQuery(GET_CART, {
+    variables: { id: cartId },
+    skip: !cartId,
+  });
+
+  useEffect(() => {
+    if (cartData?.cart) {
+      const items = cartData.cart.cartItems.map((ci) => ({
+        id: ci.product.id,
+        name: ci.product.name,
+        price: ci.product.price,
+        quantity: ci.quantity,
+      }));
+      setCartItems(items);
     }
+  }, [cartData]);
+
+  const handleAddToCart = async (product) => {
+    let id = cartId;
+    if (!id) {
+      const { data } = await createCart();
+      id = data.createCart.cart.id;
+      localStorage.setItem("cartId", id);
+      setCartId(id);
+    }
+    await addToCart({ variables: { cartId: id, productId: product.id, quantity: 1 } });
+    await refetch();
   };
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const handleUpdateCart = async (product, action) => {
+    if (action === "increase")
+      await updateCart({ variables: { cartId, productId: product.id, quantity: product.quantity + 1 } });
+    else if (action === "decrease")
+      product.quantity > 1
+        ? await updateCart({ variables: { cartId, productId: product.id, quantity: product.quantity - 1 } })
+        : await removeFromCart({ variables: { cartId, productId: product.id } });
+    else if (action === "remove")
+      await removeFromCart({ variables: { cartId, productId: product.id } });
+    await refetch();
+  };
+
+  const totalItems = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
   if (loading)
     return (
@@ -45,27 +78,19 @@ const App = () => {
 
   return (
     <Box minH="100vh" bg="gray.50">
-      <Navbar
-        cartCount={totalItems}
-        onCartClick={() => setIsDrawerOpen(true)}
-      />
-
+      <Navbar cartCount={totalItems} onCartClick={() => setIsCartOpen(true)} />
       <Box p={8}>
         <SimpleGrid columns={[1, 2, 3]} spacing={8}>
           {data.products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-            />
+            <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
           ))}
         </SimpleGrid>
       </Box>
-
       <CartDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
         cartItems={cartItems}
+        onUpdateCart={handleUpdateCart}
       />
     </Box>
   );
