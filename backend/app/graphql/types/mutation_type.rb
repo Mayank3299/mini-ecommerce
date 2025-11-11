@@ -2,6 +2,7 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :create_cart, mutation: Mutations::CreateCart
     field :remove_from_cart, mutation: Mutations::RemoveFromCart
     field :update_cart_item_quantity, mutation: Mutations::UpdateCartItemQuantity
     field :add_to_cart, mutation: Mutations::AddToCart
