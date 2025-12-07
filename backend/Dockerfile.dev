@@ -1,0 +1,28 @@
+# syntax=docker/dockerfile:1
+
+# Development Dockerfile for Rails backend
+FROM ruby:3.2.4-slim
+
+# Install dependencies
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    build-essential \
+    curl \
+    git \
+    libpq-dev \
+    libyaml-dev \
+    pkg-config \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Set working directory
+WORKDIR /rails
+
+# Install bundler
+RUN gem install bundler
+
+# Expose port 3000
+EXPOSE 3000
+
+# Entrypoint script to install gems and start server
+CMD bundle install && ./bin/rails db:prepare && ./bin/rails server -b 0.0.0.0
