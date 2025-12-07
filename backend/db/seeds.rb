@@ -13,16 +13,18 @@ products = [
   { name: "Phone Case", price: 299, stock: 100 }
 ]
 
+# Reset all products to their default stock values
 products.each do |product_attrs|
-  Product.find_or_create_by!(name: product_attrs[:name]) do |product|
-    product.price = product_attrs[:price]
-    product.stock = product_attrs[:stock]
-  end
+  product = Product.find_or_initialize_by(name: product_attrs[:name])
+  product.price = product_attrs[:price]
+  product.stock = product_attrs[:stock]
+  product.save!
 end
 
-# Set 2 random products to out of stock
-out_of_stock_products = Product.order("RANDOM()").limit(2)
-out_of_stock_products.update_all(stock: 0)
-puts "Set #{out_of_stock_products.pluck(:name).join(', ')} to out of stock"
+# Set exactly 2 random products to out of stock
+out_of_stock_ids = Product.order("RANDOM()").limit(2).pluck(:id)
+Product.where(id: out_of_stock_ids).update_all(stock: 0)
+out_of_stock_names = Product.where(id: out_of_stock_ids).pluck(:name)
+puts "Set #{out_of_stock_names.join(', ')} to out of stock"
 
 puts "Seeded #{Product.count} products!"
