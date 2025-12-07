@@ -1,31 +1,97 @@
-# === RAILS IGNORE RULES ===
-/.bundle
-/env*
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
-/tmp/pids/*
-!/tmp/pids/
-!/tmp/pids/.keep
-/storage/*
-!/storage/.keep
-/tmp/storage/*
-!/tmp/storage/
-!/tmp/storage/.keep
+# ============================================
+# SECURITY - NEVER COMMIT THESE
+# ============================================
 
-# === FRONTEND (React) ===
-/frontend/node_modules/
-/frontend/dist/
+# Rails master key and credentials
+**/master.key
+**/config/master.key
+*.key
 
-# === DOCKER ===
-/docker-compose.override.yml
-*.env.local
+# Environment files with secrets
+.env
+.env.*
+.env.local
+.env.*.local
+**/.env
+**/.env.*
 
-# === SYSTEM / EDITOR FILES ===
-.DS_Store
-.byebug_history
+# Private keys and certificates
+*.pem
+*.p12
+*.pfx
 
-# Test coverage
+# ============================================
+# RAILS / BACKEND
+# ============================================
+
+# Bundler
+.bundle/
+**/vendor/bundle/
+
+# Logs
+**/log/*.log
+*.log
+
+# Temp files
+**/tmp/cache/
+**/tmp/pids/*.pid
+**/tmp/sockets/
+**/tmp/restart.txt
+
+# Storage (uploaded files in development)
+**/storage/*.sqlite3
+
+# SQLite databases
+*.sqlite3
+*.sqlite3-*
+
+# ============================================
+# FRONTEND (React/Node)
+# ============================================
+
+# Dependencies
+**/node_modules/
+
+# Build output
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+
+# Test coverage reports
 frontend/coverage/
 backend/coverage/
+
+# Vite
+*.local
+
+# ============================================
+# DOCKER
+# ============================================
+
+docker-compose.override.yml
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Vim
+*.sw?
+*.swp
+*.swo
+*~
+
+# ============================================
+# OS FILES
+# ============================================
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ruby
+.byebug_history
+.ruby-lsp/
+
+# Ignore local overrides
+*.local
