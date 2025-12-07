@@ -20,4 +20,9 @@ products.each do |product_attrs|
   end
 end
 
+# Set 2 random products to out of stock
+out_of_stock_products = Product.order("RANDOM()").limit(2)
+out_of_stock_products.update_all(stock: 0)
+puts "Set #{out_of_stock_products.pluck(:name).join(', ')} to out of stock"
+
 puts "Seeded #{Product.count} products!"
