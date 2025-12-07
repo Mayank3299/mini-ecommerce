@@ -33,28 +33,82 @@ A full-stack e-commerce application built with React and Ruby on Rails, featurin
 
 ### Prerequisites
 
-- Docker & Docker Compose
-- Node.js 20+ (for local development)
-- Ruby 3.2+ (for local development)
+- Docker & Docker Compose installed ([Get Docker](https://docs.docker.com/get-docker/))
+
+That's it! No need to install Ruby, Rails, Node.js, or PostgreSQL locally.
 
 ### Using Docker (Recommended)
 
 ```bash
-# Clone the repository
+# 1. Clone/Fork the repository
 git clone https://github.com/yourusername/mini_ecommerce.git
 cd mini_ecommerce
 
-# Start all services
+# 2. Start all services (PostgreSQL + Rails + React)
 docker-compose up --build
 
-# In another terminal, seed the database
+# 3. Wait for services to start (first time takes 2-5 minutes)
+#    You'll see: "Listening on http://0.0.0.0:3000" from backend
+#    And: "VITE ready" from frontend
+
+# 4. In a NEW terminal, seed the database with products
 docker-compose exec backend rails db:seed
 ```
 
-Open your browser:
-- **Frontend**: http://localhost:5173
-- **GraphQL API**: http://localhost:3000/graphql
-- **GraphiQL**: http://localhost:3000/graphiql
+### 🎉 Open your browser:
+
+| Service | URL |
+|---------|-----|
+| **Frontend (Store)** | http://localhost:5173 |
+| **Backend API** | http://localhost:3000/graphql |
+| **GraphQL Playground** | http://localhost:3000/graphiql |
+
+### Common Docker Commands
+
+```bash
+# Start services (in background)
+docker-compose up -d
+
+# Stop services
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Restart a specific service
+docker-compose restart backend
+
+# Rebuild after code changes
+docker-compose up --build
+
+# Reset everything (including database)
+docker-compose down -v
+docker-compose up --build
+```
+
+### Troubleshooting
+
+**Port already in use?**
+```bash
+# If port 5432 is in use (local PostgreSQL running)
+# The docker-compose.yml already uses port 5433 externally
+
+# If port 3000 is in use
+docker-compose down
+# Edit docker-compose.yml, change "3000:3000" to "3001:3000"
+docker-compose up
+```
+
+**Database not seeded / Empty products?**
+```bash
+docker-compose exec backend rails db:seed
+```
+
+**Cart not working?**
+```
+Open browser DevTools → Application → Local Storage → Clear
+Then refresh the page
+```
 
 ### Local Development
 
@@ -287,14 +341,44 @@ open frontend/coverage/index.html
 open backend/coverage/index.html
 ```
 
-## 🤝 Contributing
+## 🤝 Contributing / Forking
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Quick Start for Forkers
 
+```bash
+# 1. Fork this repo on GitHub (click Fork button)
+
+# 2. Clone YOUR fork
+git clone https://github.com/YOUR_USERNAME/mini_ecommerce.git
+cd mini_ecommerce
+
+# 3. Run with Docker (no other setup needed!)
+docker-compose up --build
+
+# 4. Seed the database
+docker-compose exec backend rails db:seed
+
+# 5. Open http://localhost:5173 - you're done!
+```
+
+### Making Changes
+
+```bash
+# Frontend changes (React)
+# - Edit files in frontend/src/
+# - Changes hot-reload automatically
+
+# Backend changes (Rails)
+# - Edit files in backend/app/
+# - Most changes hot-reload, restart if needed:
+docker-compose restart backend
+
+# Run frontend tests
+docker-compose exec frontend npm test
+
+# Run backend tests
+docker-compose exec backend rspec
+```
 
 ## 🙏 Acknowledgments
 
