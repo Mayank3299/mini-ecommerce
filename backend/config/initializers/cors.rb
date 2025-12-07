@@ -7,7 +7,23 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'http://localhost:5173'
+    # Allow local development origins
+    origins_list = [
+      'http://localhost:5173',
+      'http://localhost:3001',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:3001'
+    ]
+    # Add Railway frontend URL if configured
+    if ENV['FRONTEND_URL'].present?
+      origins_list << ENV['FRONTEND_URL']
+    end
+    # Allow all Railway subdomains in production
+    if ENV['RAILWAY_ENVIRONMENT'].present?
+      origins_list << /\Ahttps:\/\/.*\.up\.railway\.app\z/
+    end
+    
+    origins(*origins_list)
 
     resource '*',
       headers: :any,

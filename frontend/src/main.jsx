@@ -5,8 +5,11 @@ import { system } from "@chakra-ui/react/preset";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import App from "./App";
 
+// Use environment variable for API URL, fallback to localhost for local development
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000/graphql";
+
 const client = new ApolloClient({
-  uri: "http://localhost:3000/graphql", // backend
+  uri: apiUrl,
   cache: new InMemoryCache(),
 });
 

@@ -87,18 +87,22 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: backend_production
-    username: backend
-    password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
+    # Use DATABASE_URL if available (Railway provides this), otherwise use individual settings
+    url: <%= ENV["DATABASE_URL"] %>
+    database: <%= ENV.fetch("PGDATABASE", "backend_production") %>
+    username: <%= ENV.fetch("PGUSER", "backend") %>
+    password: <%= ENV["PGPASSWORD"] || ENV["BACKEND_DATABASE_PASSWORD"] %>
+    host: <%= ENV["PGHOST"] %>
+    port: <%= ENV.fetch("PGPORT", 5432) %>
   cache:
     <<: *primary_production
-    database: backend_production_cache
+    database: <%= ENV.fetch("PGDATABASE", "backend_production") %>_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: backend_production_queue
+    database: <%= ENV.fetch("PGDATABASE", "backend_production") %>_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: backend_production_cable
+    database: <%= ENV.fetch("PGDATABASE", "backend_production") %>_cable
     migrations_paths: db/cable_migrate
