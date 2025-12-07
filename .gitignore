@@ -25,3 +25,7 @@
 # === SYSTEM / EDITOR FILES ===
 .DS_Store
 .byebug_history
+
+# Test coverage
+frontend/coverage/
+backend/coverage/
