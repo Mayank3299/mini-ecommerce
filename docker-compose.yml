@@ -47,8 +47,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-      target: development
+      dockerfile: Dockerfile.dev
     container_name: mini_ecommerce_frontend
     restart: unless-stopped
     environment:

@@ -21,8 +21,8 @@ ENV VITE_API_URL=$VITE_API_URL
 # Build the application
 RUN npm run build
 
-# Production stage - using serve to host static files
-FROM node:20-alpine AS production
+# Production stage (final stage - this is what Railway will use)
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -37,23 +37,3 @@ EXPOSE 3001
 
 # Start serve (SPA mode with -s flag)
 CMD ["serve", "-s", "dist", "-l", "3001"]
-
-# Development stage
-FROM node:20-alpine AS development
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy source code
-COPY . .
-
-# Expose port 5173 (Vite default)
-EXPOSE 5173
-
-# Start development server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
