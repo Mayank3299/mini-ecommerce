@@ -2,7 +2,6 @@
 
 A full-stack e-commerce application built with React and Ruby on Rails, featuring GraphQL API, shopping cart functionality, and Docker support.
 
-![CI/CD](https://github.com/yourusername/mini_ecommerce/workflows/CI%2FCD%20Pipeline/badge.svg)
 [![codecov](https://codecov.io/gh/yourusername/mini_ecommerce/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/mini_ecommerce)
 
 ## ✨ Features
