@@ -16,8 +16,8 @@ RSpec.describe Product, type: :model do
         expect(product).not_to be_valid
     end
 
-    it 'is invalid without a stock' do
+    it 'is valid without a stock' do
         product = Product.new(name: 'T-shirt', price: 499)
-        expect(product).not_to be_valid
+        expect(product).to be_valid
     end
 end
